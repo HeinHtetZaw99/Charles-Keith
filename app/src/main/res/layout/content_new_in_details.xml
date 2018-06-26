@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.NewInDetailsActivity"
+    tools:showIn="@layout/activity_new_in_details">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/item_details_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/basic10"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center_horizontal"
+            android:text="Ordinary Shoes"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_md" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:id="@+id/linear1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/basic10"
+                android:weightSum="1">
+
+
+                <LinearLayout
+                    android:id="@+id/item_detail_dots"
+                    android:layout_width="@dimen/basic50"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="80dp"
+                    android:layout_toLeftOf="@id/item_details_image"
+                    android:layout_weight="0.15"
+                    android:orientation="vertical"
+                    android:paddingBottom="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="@dimen/basic60"
+                    android:paddingTop="0dp" />
+
+                <com.daniel.user.charleskeith.custom.VerticalViewPager
+                    android:id="@+id/item_details_image"
+                    android:layout_width="280dp"
+                    android:layout_height="300dp"
+                    android:layout_below="@id/item_details_name"
+                    android:layout_marginStart="@dimen/basic20"
+                    android:layout_weight="0.65" />
+
+                <Button
+                    android:id="@+id/item_details_color_btn"
+                    android:layout_width="@dimen/button_40"
+                    android:layout_height="@dimen/button_100"
+                    android:layout_marginStart="@dimen/basic10"
+                    android:layout_marginTop="@dimen/button_60"
+                    android:layout_weight="0.15"
+                    android:background="@drawable/color"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/item_details_info"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/basic30"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/button_40"
+                android:layout_marginTop="@dimen/button_60"
+                android:background="@drawable/button_bg"
+                android:drawablePadding="@dimen/basic5"
+                android:drawableStart="@drawable/plus"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:paddingStart="@dimen/basic5"
+                android:text="INFO"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_sm"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/item_details_suggestions_pane"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/basic5"
+                    android:gravity="center_horizontal"
+                    android:text="YOU MAY ALSO LIKE "
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/text_sm" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/item_details_suggestions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

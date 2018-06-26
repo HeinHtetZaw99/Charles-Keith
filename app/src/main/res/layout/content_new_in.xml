@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.NewInActivity"
+    tools:showIn="@layout/app_bar_new_in">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/upper_button_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/basic5"
+            android:paddingTop="@dimen/basic5"
+            android:weightSum="5"
+
+            >
+
+            <ImageButton
+                android:id="@+id/tab_option_1"
+                android:layout_width="@dimen/button_80"
+                android:layout_height="@dimen/button_40"
+                android:background="@android:color/transparent"
+                android:src="@drawable/column1" />
+
+            <ImageButton
+                android:id="@+id/tab_option_2"
+                android:layout_width="@dimen/button_80"
+                android:layout_height="@dimen/button_40"
+                android:layout_toRightOf="@id/tab_option_1"
+                android:background="@android:color/transparent"
+                android:src="@drawable/column2" />
+
+            <Button
+                android:id="@+id/sort_btn"
+                android:layout_width="@dimen/button_100"
+                android:layout_height="@dimen/button_40"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/column2"
+                android:text="@string/sort_by"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/new_in_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/upper_button_tab"
+            android:background="@color/colorPrimary"
+            android:foregroundGravity="center_vertical"
+            android:paddingEnd="@dimen/basic10"
+            android:paddingStart="@dimen/basic10"
+            android:paddingTop="@dimen/basic5">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
