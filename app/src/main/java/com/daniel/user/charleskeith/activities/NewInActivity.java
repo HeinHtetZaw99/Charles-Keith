@@ -1,63 +1,99 @@
 package com.daniel.user.charleskeith.activities;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.daniel.user.charleskeith.CharlesAndKeithAPP;
 import com.daniel.user.charleskeith.R;
 import com.daniel.user.charleskeith.adapters.NewInAdapter;
-import com.daniel.user.charleskeith.adapters.NewInAdapterColumn2;
+import com.daniel.user.charleskeith.data.vo.ProductsVO;
 import com.daniel.user.charleskeith.mvp.presenters.NewsInPresenter;
 import com.daniel.user.charleskeith.mvp.views.NewInView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NewInActivity extends AppCompatActivity
+public class NewInActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, NewInView {
 
+
+    @BindView(R.id.item_count)
+    TextView itemCount;
+    private boolean HAS_ANOTHER_COLUMN = false;
     @BindView(R.id.tab_option_1)
     ImageButton mColumn1Button;
-
     @BindView(R.id.tab_option_2)
     ImageButton mColumn2Button;
+
     @BindView(R.id.new_in_rv)
     RecyclerView rvNewIn;
-    private int COLUMN_COUNT = 1;
+
     private NewsInPresenter mPresenter;
     private NewInAdapter newInAdapter;
-    private NewInAdapterColumn2 newInAdapterColumn2;
+
     private GridLayoutManager gridLayoutManager;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_new_in);
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this, this);
 
-        mPresenter = new NewsInPresenter(this);
+
+        mPresenter = ViewModelProviders.of(this).get(NewsInPresenter.class);
+        mPresenter.initPresenter(this);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        mPresenter.getProductsLD().observe(this, new Observer<List<ProductsVO>>() {
+            @Override
+            public void onChanged(@Nullable List<ProductsVO> productsVOS) {
+                displayProducts(productsVOS);
+                Log.d(CharlesAndKeithAPP.APP_LOG, "Livedata reached");
+            }
+        });
+        mPresenter.getErrorLD().observe(this, this);
+
+
         gridLayoutManager = new GridLayoutManager(this, 2);
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        newInAdapter = new NewInAdapter(getApplicationContext(), mPresenter, 1);
+
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         mColumn1Button.setImageDrawable(getDrawable(R.drawable.column1_color));
@@ -66,12 +102,11 @@ public class NewInActivity extends AppCompatActivity
         mColumn1Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (COLUMN_COUNT == 2) {
-                    COLUMN_COUNT = 1;
-                }
+
                 mColumn1Button.setImageDrawable(getDrawable(R.drawable.column1_color));
                 mColumn2Button.setImageDrawable(getDrawable(R.drawable.column2));
-                onStart();
+                rvNewIn.setLayoutManager(linearLayoutManager);
+
 
             }
         });
@@ -79,32 +114,37 @@ public class NewInActivity extends AppCompatActivity
         mColumn2Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (COLUMN_COUNT == 1) {
-                    COLUMN_COUNT = 2;
-                }
+
                 mColumn1Button.setImageDrawable(getDrawable(R.drawable.column1));
                 mColumn2Button.setImageDrawable(getDrawable(R.drawable.column2_color));
-                onStart();
+
+                rvNewIn.setLayoutManager(gridLayoutManager);
+//                newInAdapter = new NewInAdapter(getApplicationContext(), mPresenter ,2);
+
 
             }
         });
+
+        rvNewIn.setLayoutManager(linearLayoutManager);
+        rvNewIn.setAdapter(newInAdapter);
+//        itemCount.setText(newInAdapter.getItemCount() + " ITEMS");
+        Log.d(CharlesAndKeithAPP.APP_LOG, "Items np :" + newInAdapter.getItemCount());
+
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (COLUMN_COUNT == 2) {
-            rvNewIn.setLayoutManager(gridLayoutManager);
-            newInAdapterColumn2 = new NewInAdapterColumn2(this, mPresenter);
-            rvNewIn.setAdapter(newInAdapterColumn2);
-
-        } else {
-            rvNewIn.setLayoutManager(new LinearLayoutManager(this));
-            newInAdapter = new NewInAdapter(this, mPresenter);
-            rvNewIn.setAdapter(newInAdapter);
-        }
+        itemCount.setText(newInAdapter.getItemCount() + " ITEMS ");
+        Log.d(CharlesAndKeithAPP.APP_LOG, "Items np from onStart:" + newInAdapter.getItemCount());
     }
+
+    private void displayProducts(List<ProductsVO> productsVOS) {
+        newInAdapter.appendNewData(productsVOS);
+
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -145,6 +185,7 @@ public class NewInActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.new_in) {
+
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
@@ -163,15 +204,25 @@ public class NewInActivity extends AppCompatActivity
         return true;
     }
 
-    public Intent newIntent(Context context) {
+    public Intent newIntent(Context context, String id) {
         Intent intent = new Intent(context, NewInDetailsActivity.class);
+        intent.putExtra("id", id);
         return intent;
     }
 
     @Override
-    public void launchItemDetailsScreen() {
-        Intent intent = newIntent(this);
+    public void launchItemDetailsScreen(String id) {
+        Intent intent = newIntent(this, id);
         startActivity(intent);
 
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        List<ProductsVO> productsVO =  CKModel.getmInstance().getAllProduct();
+//        displayProducts(productsVO);
+    }
+
 }

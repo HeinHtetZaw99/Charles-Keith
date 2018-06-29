@@ -11,17 +11,16 @@ import com.daniel.user.charleskeith.delegates.NewInDelegate;
 
 import butterknife.BindView;
 
-public class NewInViewHolder extends BaseViewHolder<ProductsVO> {
-    private NewInDelegate newInDelegate;
-
-    @BindView(R.id.item_name_lg)
+public class NewInViewHolder2 extends BaseViewHolder<ProductsVO> {
+    @BindView(R.id.item_name)
     TextView mItemName;
-    @BindView(R.id.item_picture_lg)
+    @BindView(R.id.item_picture)
     ImageView mItemPicture;
+    private NewInDelegate newInDelegate;
     private ProductsVO productsVO;
 
 
-    public NewInViewHolder(View itemview, NewInDelegate newInDelegate) {
+    public NewInViewHolder2(View itemview, NewInDelegate newInDelegate) {
         super(itemview);
         this.newInDelegate = newInDelegate;
 
@@ -35,13 +34,13 @@ public class NewInViewHolder extends BaseViewHolder<ProductsVO> {
     @Override
     public void setmData(ProductsVO mData) {
         productsVO = mData;
-
-
         mItemName.setText(mData.getProductTitle());
+
 
         Glide.with(mItemPicture.getContext())
                 .load(mData.getProductImage())
                 .into(mItemPicture);
     }
+
 
 }

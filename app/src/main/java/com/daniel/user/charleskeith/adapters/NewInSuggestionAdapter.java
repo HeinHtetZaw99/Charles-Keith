@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daniel.user.charleskeith.R;
+import com.daniel.user.charleskeith.data.vo.ProductsVO;
 import com.daniel.user.charleskeith.viewholders.NewInDetailsViewHolder;
 
-public class NewInSuggestionAdapter extends BaseRecyclerAdapter<NewInDetailsViewHolder> {
+public class NewInSuggestionAdapter extends BaseRecyclerAdapter<NewInDetailsViewHolder, ProductsVO> {
     public NewInSuggestionAdapter(Context context) {
         super(context);
     }

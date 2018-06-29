@@ -50,20 +50,42 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/tab_option_1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView xmlns:tools="http://schemas.android.com/tools"
+                        android:id="@+id/item_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/basic5"
+                        android:gravity="center_horizontal"
+                        tools:text="10 items" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/new_in_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/upper_button_tab"
+                        android:background="@color/colorPrimary"
+                        android:foregroundGravity="center"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingEnd="@dimen/basic10"
+                        android:paddingStart="@dimen/basic10"
+                        android:paddingTop="@dimen/basic5">
+
+                    </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+
+            </android.support.v4.widget.NestedScrollView>
+
         </RelativeLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/new_in_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/upper_button_tab"
-            android:background="@color/colorPrimary"
-            android:foregroundGravity="center_vertical"
-            android:paddingEnd="@dimen/basic10"
-            android:paddingStart="@dimen/basic10"
-            android:paddingTop="@dimen/basic5">
-
-        </android.support.v7.widget.RecyclerView>
 
 
     </RelativeLayout>

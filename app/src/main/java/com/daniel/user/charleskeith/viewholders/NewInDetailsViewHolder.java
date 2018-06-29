@@ -8,6 +8,11 @@ public class NewInDetailsViewHolder extends BaseViewHolder {
     }
 
     @Override
+    public void setmData(Object mData) {
+
+    }
+
+    @Override
     public void onClick(View v) {
 
     }

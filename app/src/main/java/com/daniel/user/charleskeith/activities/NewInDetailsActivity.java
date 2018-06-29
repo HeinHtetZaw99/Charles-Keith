@@ -1,6 +1,9 @@
 package com.daniel.user.charleskeith.activities;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,25 +19,20 @@ import android.widget.TextView;
 import com.daniel.user.charleskeith.R;
 import com.daniel.user.charleskeith.adapters.NewInSuggestionAdapter;
 import com.daniel.user.charleskeith.adapters.Slider_Adapter;
+import com.daniel.user.charleskeith.data.vo.ProductsVO;
 import com.daniel.user.charleskeith.mvp.presenters.NewInDetailsPresenter;
 import com.daniel.user.charleskeith.mvp.views.NewInDetailsView;
+import com.daniel.user.charleskeith.persistencec.dao.ProductsDB;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NewInDetailsActivity extends AppCompatActivity implements NewInDetailsView {
-
-    @BindView(R.id.item_details_image)
-    ViewPager itemDetailsViewPager;
-    TextView[] mDots;
-    @BindView(R.id.item_detail_dots)
-    LinearLayout mDotLayout;
-    @BindView(R.id.item_details_suggestions)
-    RecyclerView mItemSuggestions;
-    @BindView(R.id.item_details_suggestions_pane)
-    LinearLayout mSuggestionPane;
-    NewInSuggestionAdapter newInAdapter;
-    ActionBar actionBar;
+    List<ProductsVO> productsVO;
+    @BindView(R.id.item_details_name)
+    TextView itemName;
     ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -44,8 +42,9 @@ public class NewInDetailsActivity extends AppCompatActivity implements NewInDeta
         @Override
         public void onPageSelected(int position) {
             addDotsIndicator(position);
-            if ((position + 1) == mDots.length) {
+            if ((position) == mDots.length) {
                 mItemSuggestions.setVisibility(View.VISIBLE);
+
 
             } else
                 mItemSuggestions.setVisibility(View.GONE);
@@ -57,6 +56,18 @@ public class NewInDetailsActivity extends AppCompatActivity implements NewInDeta
         }
 
     };
+    @BindView(R.id.item_details_image)
+    ViewPager itemDetailsViewPager;
+    TextView[] mDots;
+    @BindView(R.id.item_detail_dots)
+    LinearLayout mDotLayout;
+    @BindView(R.id.item_details_suggestions)
+    RecyclerView mItemSuggestions;
+    @BindView(R.id.item_details_suggestions_pane)
+    LinearLayout mSuggestionPane;
+    NewInSuggestionAdapter newInAdapter;
+    ActionBar actionBar;
+    private String currentId;
     private NewInDetailsPresenter mPresenter;
     private Slider_Adapter sliderAdapter;
 
@@ -67,14 +78,17 @@ public class NewInDetailsActivity extends AppCompatActivity implements NewInDeta
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this, this);
-        mPresenter = new NewInDetailsPresenter(this);
 
+        mPresenter = ViewModelProviders.of(this).get(NewInDetailsPresenter.class);
+        mPresenter.initPresenter(this);
+        currentId = getIntent().getStringExtra("id");
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setHomeAsUpIndicator(getDrawable(R.drawable.back_icon));
         actionBar.setTitle("NEW IN");
 
+        productsVO = ProductsDB.getmInstance(getApplicationContext()).productDao().getProductById(currentId);
 
         sliderAdapter = new Slider_Adapter(this);
         itemDetailsViewPager.setAdapter(sliderAdapter);
@@ -85,12 +99,22 @@ public class NewInDetailsActivity extends AppCompatActivity implements NewInDeta
         mItemSuggestions.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         newInAdapter = new NewInSuggestionAdapter(this);
         mItemSuggestions.setAdapter(newInAdapter);
+        itemName.setText(productsVO.get(0).getProductTitle());
 
+
+        mPresenter.getProductLDById(currentId).observe(this, new Observer<List<ProductsVO>>() {
+            @Override
+            public void onChanged(@Nullable List<ProductsVO> productsVOS) {
+                sliderAdapter.setmProducts(productsVOS);
+            }
+        });
 
     }
 
     public void addDotsIndicator(int position) {
-        mDots = new TextView[6];
+
+
+        mDots = new TextView[productsVO.size() + 1];
 
 
         mDotLayout.removeAllViews();
@@ -129,4 +153,5 @@ public class NewInDetailsActivity extends AppCompatActivity implements NewInDeta
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
